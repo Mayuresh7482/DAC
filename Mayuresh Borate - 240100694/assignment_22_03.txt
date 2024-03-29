@@ -1,0 +1,739 @@
+student@hp:~$ sudo mysql
+[sudo] password for student: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.36-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cdac_college       |
+| cdaccdb            |
+| college            |
+| information_schema |
+| mysql              |
+| org                |
+| performance_schema |
+| pgdac              |
+| sys                |
+| worker             |
++--------------------+
+10 rows in set (0.02 sec)
+
+mysql> create database college;
+ERROR 1007 (HY000): Can't create database 'college'; database exists
+mysql> use database college;
+ERROR 1049 (42000): Unknown database 'database'
+mysql> use college;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_college |
++-------------------+
+| dac_college       |
+| student           |
++-------------------+
+2 rows in set (0.01 sec)
+
+mysql> create table student1 (roll int,name varchar(20),class varchar (10),marks int,age int);
+Query OK, 0 rows affected (0.49 sec)
+
+mysql> insert into student1 (88,'chetan','DAC',90,23),(56,'mayur','DBDA',95,24),(06,'anushka','BTECH',80,20),(20,'Aarti','CA',91,25);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '88,'chetan','DAC',90,23),(56,'mayur','DBDA',95,24),(06,'anushka','BTECH',80,20),' at line 1
+mysql> insert into student1 values (88,'chetan','DAC',90,23),(56,'mayur','DBDA',95,24),(06,'anushka','BTECH',80,20),(20,'Aarti','CA',91,25);
+Query OK, 4 rows affected (0.09 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from student1;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DBDA  |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
++------+---------+-------+-------+------+
+4 rows in set (0.00 sec)
+
+mysql> update table student1 set class='DAC' from roll=56;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table student1 set class='DAC' from roll=56' at line 1
+mysql> update student1 set class='DAC' where roll=56;
+Query OK, 1 row affected (0.08 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student1;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DAC   |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
++------+---------+-------+-------+------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct class from student1;
++-------+
+| class |
++-------+
+| DAC   |
+| BTECH |
+| CA    |
++-------+
+3 rows in set (0.02 sec)
+
+mysql> select class,avg(marks) from student1;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'college.student1.class'; this is incompatible with sql_mode=only_full_group_by
+mysql> select,avg(marks) from student1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',avg(marks) from student1' at line 1
+mysql> select avg(marks) from student1;
++------------+
+| avg(marks) |
++------------+
+|    89.0000 |
++------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT column_name(s)
+    -> FROM table_name
+    -> WHERE condition
+    -> GROUP BY column_name(s)
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> ^C
+mysql> select marks from student1 where marks>90 group by marks;
++-------+
+| marks |
++-------+
+|    95 |
+|    91 |
++-------+
+2 rows in set (0.00 sec)
+
+mysql> select roll+100 as roll ,name,marks from student1;
++------+---------+-------+
+| roll | name    | marks |
++------+---------+-------+
+|  188 | chetan  |    90 |
+|  156 | mayur   |    95 |
+|  106 | anushka |    80 |
+|  120 | Aarti   |    91 |
++------+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select roll+100 as roll * from student1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '* from student1' at line 1
+mysql> select roll+100 as roll,name,class,marks,age from student1;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|  188 | chetan  | DAC   |    90 |   23 |
+|  156 | mayur   | DAC   |    95 |   24 |
+|  106 | anushka | BTECH |    80 |   20 |
+|  120 | Aarti   | CA    |    91 |   25 |
++------+---------+-------+-------+------+
+4 rows in set (0.00 sec)
+
+mysql> select marks,marks/10+0.34 as CGPA from student1;
++-------+--------+
+| marks | CGPA   |
++-------+--------+
+|    90 | 9.3400 |
+|    95 | 9.8400 |
+|    80 | 8.3400 |
+|    91 | 9.4400 |
++-------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select marks(marks/10+0.34) as CGPA from student1;
+ERROR 1305 (42000): FUNCTION college.marks does not exist
+mysql> select marks (marks/10+0.34) as CGPA from student1;
+ERROR 1305 (42000): FUNCTION college.marks does not exist
+mysql> select marks, (marks/10+0.34) as CGPA from student1;
++-------+--------+
+| marks | CGPA   |
++-------+--------+
+|    90 | 9.3400 |
+|    95 | 9.8400 |
+|    80 | 8.3400 |
+|    91 | 9.4400 |
++-------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from student1 where name like 'a%';
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
++------+---------+-------+-------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student1 where name like 'A%';
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
++------+---------+-------+-------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student1 where name like '6%';
+Empty set (0.00 sec)
+
+mysql> 
+mysql> select * from student1 where name like '5%';
+Empty set (0.00 sec)
+
+mysql> select * from student1 where marks like '9%';
++------+--------+-------+-------+------+
+| roll | name   | class | marks | age  |
++------+--------+-------+-------+------+
+|   88 | chetan | DAC   |    90 |   23 |
+|   56 | mayur  | DAC   |    95 |   24 |
+|   20 | Aarti  | CA    |    91 |   25 |
++------+--------+-------+-------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from student1 where marks>92 and class='DAC';
++------+-------+-------+-------+------+
+| roll | name  | class | marks | age  |
++------+-------+-------+-------+------+
+|   56 | mayur | DAC   |    95 |   24 |
++------+-------+-------+-------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from student1 where marks>92 or class='DAC';
++------+--------+-------+-------+------+
+| roll | name   | class | marks | age  |
++------+--------+-------+-------+------+
+|   88 | chetan | DAC   |    90 |   23 |
+|   56 | mayur  | DAC   |    95 |   24 |
++------+--------+-------+-------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student1 where not marks>92 or class='DAC';
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DAC   |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
++------+---------+-------+-------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from student1 where roll=88 or roll=6;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|    6 | anushka | BTECH |    80 |   20 |
++------+---------+-------+-------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student1 where roll=88 and roll=6;
+Empty set (0.00 sec)
+
+mysql> select * from student1 where roll not in (88,6);
++------+-------+-------+-------+------+
+| roll | name  | class | marks | age  |
++------+-------+-------+-------+------+
+|   56 | mayur | DAC   |    95 |   24 |
+|   20 | Aarti | CA    |    91 |   25 |
++------+-------+-------+-------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student1 where marks betweem 80 and 92;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'betweem 80 and 92' at line 1
+mysql> select * from student1 where marks between 80 and 92;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
++------+---------+-------+-------+------+
+3 rows in set (0.00 sec)
+
+mysql> insert into student1 values (12,'null','DITIS',60,26);
+
+Query OK, 1 row affected (0.07 sec)
+
+mysql> 
+mysql> select * from student1;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DAC   |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
+|   12 | null    | DITIS |    60 |   26 |
++------+---------+-------+-------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from student1 where name is null;
+Empty set (0.00 sec)
+
+mysql> select * from student1 where name is not null;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DAC   |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
+|   12 | null    | DITIS |    60 |   26 |
++------+---------+-------+-------+------+
+5 rows in set (0.00 sec)
+
+mysql> insert into student1 values (14,null,'DITIS',60,26);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> select * from student1;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DAC   |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
+|   12 | null    | DITIS |    60 |   26 |
+|   14 | NULL    | DITIS |    60 |   26 |
++------+---------+-------+-------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from student1 where name is not null;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DAC   |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
+|   12 | null    | DITIS |    60 |   26 |
++------+---------+-------+-------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from student1 where name is null;
++------+------+-------+-------+------+
+| roll | name | class | marks | age  |
++------+------+-------+-------+------+
+|   14 | NULL | DITIS |    60 |   26 |
++------+------+-------+-------+------+
+1 row in set (0.00 sec)
+
+mysql> select count (roll) from student1;
+ERROR 1630 (42000): FUNCTION college.count does not exist. Check the 'Function Name Parsing and Resolution' section in the Reference Manual
+mysql> select count (roll) from student1 where roll>50;
+ERROR 1630 (42000): FUNCTION college.count does not exist. Check the 'Function Name Parsing and Resolution' section in the Reference Manual
+mysql> select count roll from student1 where roll>50;
+ERROR 1054 (42S22): Unknown column 'count' in 'field list'
+mysql> select count 'roll' from student1 where roll>50;
+ERROR 1054 (42S22): Unknown column 'count' in 'field list'
+mysql> select count (marks) from student1 where roll>50;
+ERROR 1630 (42000): FUNCTION college.count does not exist. Check the 'Function Name Parsing and Resolution' section in the Reference Manual
+mysql> select count (marks) from student1 where marks>80;
+ERROR 1630 (42000): FUNCTION college.count does not exist. Check the 'Function Name Parsing and Resolution' section in the Reference Manual
+mysql> update student1 set name = 'Lucky'where name is null;
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student1;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DAC   |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
+|   12 | null    | DITIS |    60 |   26 |
+|   14 | Lucky   | DITIS |    60 |   26 |
++------+---------+-------+-------+------+
+6 rows in set (0.00 sec)
+
+mysql> create table student2 (roll tinyint, name varchar(15) ,marks float) values ( 20,'Aarti',91),(14,'Lucky',60)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '( 20,'Aarti',91),(14,'Lucky',60)' at line 1
+mysql> create table student2 (roll tinyint, name varchar(15) ,marks float) values ( 20,'Aarti',91),(14,'Lucky',60);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '( 20,'Aarti',91),(14,'Lucky',60)' at line 1
+mysql> create table student2 (roll tinyint, name varchar(15) ,marks float) values ( 20,'Aarti',91),(14,'Lucky',60);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '( 20,'Aarti',91),(14,'Lucky',60)' at line 1
+mysql> create table student2 (roll tinyint, name varchar(15) ,marks float) values ( 20,'Aarti',91),(14,'Lucky',60);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '( 20,'Aarti',91),(14,'Lucky',60)' at line 1
+mysql> select * from student2;
+ERROR 1146 (42S02): Table 'college.student2' doesn't exist
+mysql> create table student2 (roll tinyint, name varchar(15) ,marks float) ;
+Query OK, 0 rows affected (1.38 sec)
+
+mysql> select * from student2;
+Empty set (0.00 sec)
+
+mysql> insert into student2 values(20,'Aarti',91),(14,'Lucky',60);
+Query OK, 2 rows affected (0.12 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from student2;
++------+-------+-------+
+| roll | name  | marks |
++------+-------+-------+
+|   20 | Aarti |    91 |
+|   14 | Lucky |    60 |
++------+-------+-------+
+2 rows in set (0.01 sec)
+
+mysql> insert into student2 values(15,'Shital',50);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from student2;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|   20 | Aarti  |    91 |
+|   14 | Lucky  |    60 |
+|   15 | Shital |    50 |
++------+--------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from student1 union select * from student2;
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql> select * from student1 union select * from student2;
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql> select * from student1 
+    -> union 
+    -> select *from student2;
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql> select roll,name,marks from student1 union  select *from student2;
++------+---------+-------+
+| roll | name    | marks |
++------+---------+-------+
+|   88 | chetan  |    90 |
+|   56 | mayur   |    95 |
+|    6 | anushka |    80 |
+|   20 | Aarti   |    91 |
+|   12 | null    |    60 |
+|   14 | Lucky   |    60 |
+|   15 | Shital  |    50 |
++------+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> OrderIDCustomerNameOrderDate
+    -> 10248Wilman Kala1996-07-04
+    -> 10249Tradição Hipermercados1996-07-05
+    -> 10250Hanari Carnes1996-07-08
+    -> 10251Victuailles en stock1996-07-08
+    -> 10252Suprêmes délices1996-07-09
+    -> 10253Hanari Carnes1996-07-10
+    -> 10254Chop-suey Chinese1996-07-11
+    -> 
+[1]+  Stopped                 sudo mysql
+student@hp:~$ sudo mysql
+[sudo] password for student: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.36-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use college;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select avg(marks) from dac_college;
++------------+
+| avg(marks) |
++------------+
+|      78.75 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> show tables
+    -> ;
++-------------------+
+| Tables_in_college |
++-------------------+
+| dac_college       |
+| student           |
+| student1          |
+| student2          |
++-------------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from student1
+    -> select * from student2;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select * from student2' at line 2
+mysql> select * from student1;
++------+---------+-------+-------+------+
+| roll | name    | class | marks | age  |
++------+---------+-------+-------+------+
+|   88 | chetan  | DAC   |    90 |   23 |
+|   56 | mayur   | DAC   |    95 |   24 |
+|    6 | anushka | BTECH |    80 |   20 |
+|   20 | Aarti   | CA    |    91 |   25 |
+|   12 | null    | DITIS |    60 |   26 |
+|   14 | Lucky   | DITIS |    60 |   26 |
++------+---------+-------+-------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from student2;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|   20 | Aarti  |    91 |
+|   14 | Lucky  |    60 |
+|   15 | Shital |    50 |
++------+--------+-------+
+3 rows in set (0.00 sec)
+
+mysql> show databses;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'databses' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cdac_college       |
+| cdaccdb            |
+| college            |
+| information_schema |
+| mysql              |
+| org                |
+| performance_schema |
+| pgdac              |
+| sys                |
+| worker             |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> create database office;
+Query OK, 1 row affected (0.13 sec)
+
+mysql> create table department (dept_id int primary key,dept_name varchar(100),dept_block varchar (100));
+Query OK, 0 rows affected (0.41 sec)
+
+mysql> create table employee
+    -> (emp_id int primary key,
+    -> name varchar (100),
+    -> ^C
+mysql> create table student 
+    -> (stud_id int primary key ,
+    -> name varchar (100),
+    -> dept_id int,
+    -> birth varchar (100));
+ERROR 1050 (42S01): Table 'student' already exists
+mysql> create table employee  (emp_id int primary key , name varchar (100), dept_id int, birth varchar (100));
+Query OK, 0 rows affected (1.13 sec)
+
+mysql> show tables
+    -> ;
++-------------------+
+| Tables_in_college |
++-------------------+
+| dac_college       |
+| department        |
+| employee          |
+| student           |
+| student1          |
+| student2          |
++-------------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from department;
+Empty set (0.00 sec)
+
+mysql> insert into department
+    -> (1,'Computer Science','B-block'),
+    -> (2,'Information technology','C-block'),
+    -> (3,'Mechanical','A-block'),
+    -> (4,'Electronics Communication','D-block');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1,'Computer Science','B-block'),
+(2,'Information technology','C-block'),
+(3,'Mec' at line 2
+mysql> insert into department values (1,'Computer Science','B-block'), (2,'Information technology','C-block'), (3,'Mechanical','A-block'), (4,'Electronics Communication','D-block');
+Query OK, 4 rows affected (0.12 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from department;
++---------+---------------------------+------------+
+| dept_id | dept_name                 | dept_block |
++---------+---------------------------+------------+
+|       1 | Computer Science          | B-block    |
+|       2 | Information technology    | C-block    |
+|       3 | Mechanical                | A-block    |
+|       4 | Electronics Communication | D-block    |
++---------+---------------------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into employee
+    -> values (1,'Maria Gloria',2,'1994-03-12),
+    '> (2,'John Smith',1,'1993-02-07'),
+    '> (3,'Gal Rao',4,'1992-09-11'),
+    '> (4,'Jakey Smith',2,'1990-08-31'),
+    '> (5,'Rama Saho',1,'1994-12-09'),
+    '> (6,'Maria Gaga',4,'1993-10-09');
+    '> 
+    '> ^C
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12),
+    '>     '> (2,'John Smith',1,'1993-02-07'),
+    ->     '> (3,'Gal Rao',4,'1992-09-11'),
+    '>     '> (4,'Jakey Smith',2,'1990-08-31'),
+    ->     '> (5,'Rama Saho',1,'1994-12-09'),
+    '>     '> (6,'Maria Gaga',4,'1993-10-09');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Gal Rao',4,'1992-09-11'),
+    '> (4,'Jakey Smith',2,'1990-08-31'),
+    '> (5,'Ra' at line 3
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12),
+    '> (2,'John Smith',1,'1993-02-07'),     '> (3,'Gal Rao',4,'1992-09-11'),
+    '> (4,'Jakey Smith',2,'1990-08-31'),     '> (5,'Rama Saho',1,'1994-12-09'),
+    '> (6,'Maria Gaga',4,'1993-10-09');
+    '> insert into employee values (1,'Maria Gloria',2,'1994-03-12),^C
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12),
+    '>     '>     '> (2,'John Smith',1,'1993-02-07'),
+    '>     ->     '> (3,'Gal Rao',4,'1992-09-11'),
+    ->     '>     '> (4,'Jakey Smith',2,'1990-08-31'),
+    ->     ->     '> (5,'Rama Saho',1,'1994-12-09'),
+    '>  (6,'Maria Gaga',4,'1993-10-09');^C
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12),
+    '> (2,'John Smith',1,'1993-02-07'),
+    '> (3,'Gal Rao',4,'1992-09-11'),
+    '> (4,'Jakey Smith',2,'1990-08-31'),(5,'Rama Saho',1,'1994-12-09'),(6,'Maria Gaga',4,'1993-10-09');
+    '> (2,'John Smith',1,'1993-02-07')
+    '> 
+    '> ^C
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12);
+    '> ^C
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12);
+    '> ^C
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cdac_college       |
+| cdaccdb            |
+| college            |
+| information_schema |
+| mysql              |
+| office             |
+| org                |
+| performance_schema |
+| pgdac              |
+| sys                |
+| worker             |
++--------------------+
+11 rows in set (0.01 sec)
+
+mysql> use office;
+Database changed
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12);
+    '> ^C
+mysql> show tables;
+Empty set (0.01 sec)
+
+mysql> use college;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_college |
++-------------------+
+| dac_college       |
+| department        |
+| employee          |
+| student           |
+| student1          |
+| student2          |
++-------------------+
+6 rows in set (0.01 sec)
+
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12);
+    '> ^C
+mysql> desc employee;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| emp_id  | int          | NO   | PRI | NULL    |       |
+| name    | varchar(100) | YES  |     | NULL    |       |
+| dept_id | int          | YES  |     | NULL    |       |
+| birth   | varchar(100) | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into employee values (1,'Maria Gloria',2,'1994-03-12');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values (2,'John Smith',1,'1993-02-07');
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into employee values(3,'Gal Rao',4,'1992-09-11');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into employee values(4,'Jakey Smith',2,'1990-08-31'),(5,'Rama Saho',1,'1994-12-09'),(6,'Maria Gaga',4,'1993-10-09');
+Query OK, 3 rows affected (0.11 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee;
++--------+--------------+---------+------------+
+| emp_id | name         | dept_id | birth      |
++--------+--------------+---------+------------+
+|      1 | Maria Gloria |       2 | 1994-03-12 |
+|      2 | John Smith   |       1 | 1993-02-07 |
+|      3 | Gal Rao      |       4 | 1992-09-11 |
+|      4 | Jakey Smith  |       2 | 1990-08-31 |
+|      5 | Rama Saho    |       1 | 1994-12-09 |
+|      6 | Maria Gaga   |       4 | 1993-10-09 |
++--------+--------------+---------+------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from department;;
++---------+---------------------------+------------+
+| dept_id | dept_name                 | dept_block |
++---------+---------------------------+------------+
+|       1 | Computer Science          | B-block    |
+|       2 | Information technology    | C-block    |
+|       3 | Mechanical                | A-block    |
+|       4 | Electronics Communication | D-block    |
++---------+---------------------------+------------+
+4 rows in set (0.00 sec)
+
+ERROR: 
+No query specified
+
+mysql> select * from department;
++---------+---------------------------+------------+
+| dept_id | dept_name                 | dept_block |
++---------+---------------------------+------------+
+|       1 | Computer Science          | B-block    |
+|       2 | Information technology    | C-block    |
+|       3 | Mechanical                | A-block    |
+|       4 | Electronics Communication | D-block    |
++---------+---------------------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> 
+
+
