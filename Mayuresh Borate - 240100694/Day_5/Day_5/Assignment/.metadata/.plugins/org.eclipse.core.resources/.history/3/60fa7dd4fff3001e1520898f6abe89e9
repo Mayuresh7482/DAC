@@ -1,0 +1,22 @@
+package com.cdac.tester;
+import com.cdac.fruits.Apple;
+import com.cdac.fruits.Mango;
+import com.cdac.fruits.Orange;
+public class FruitBaskate {
+
+	
+
+	public static void main(String[] args) {
+		Apple a=new Apple("Red",25,"Apple",true);
+		System.out.println("Apple Taste ="+a);
+		
+		Mango m=new Mango("Yellow",45,"Mango",false);
+		System.out.println("Mango Taste ="+m.taste());
+		
+		Orange o=new Orange("Orange",34,"Orange",true);
+		System.out.println("Orange Taste ="+o.taste());
+	   
+
+	}
+
+}

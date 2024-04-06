@@ -1,0 +1,7 @@
+package com.cdac.fruits;
+
+public class Apple extends Fruits
+{ 
+	 Apple(String colour,double weight,String name,boolean fresh)
+
+}

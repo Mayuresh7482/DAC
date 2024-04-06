@@ -1,0 +1,11 @@
+package com.cdac.fruits;
+
+public class Apple extends Fruits
+{ 
+	public String taste()
+	{
+		return "Sweet and Sour Taste !";
+	}
+	
+
+}

@@ -1,0 +1,20 @@
+package com.cdac.fruits;
+
+public class Mango extends Fruits 
+{
+
+	public Mango(String colour,double weight,String name,boolean fresh)
+	{
+		super("Mango"+colour,weight,name,fresh);
+		
+	}
+	public String taste()
+	{
+		return "Sweet  !";
+	}
+	public void pulp()
+	{
+		Fruits f1=new Fruits("Mango","Yellow");
+		System.out.println("Create Pulp"+setName(name));
+	}
+}

@@ -1,0 +1,9 @@
+package com.cdac.fruits;
+
+public class Orange {
+
+	public Orange() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

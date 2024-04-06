@@ -1,0 +1,17 @@
+package com.cdac.fruits;
+
+public class Orange extends Fruits {
+
+	public Orange() {
+		public Orange(String colour,double weight,String name,boolean fresh)
+		{
+			super("Orange"+colour,weight,name,fresh);
+			
+		}
+		public String taste()
+		{
+			return "Sour !";
+		}
+	}
+
+}

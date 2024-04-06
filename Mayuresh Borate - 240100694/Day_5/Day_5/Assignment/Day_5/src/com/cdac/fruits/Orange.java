@@ -1,0 +1,32 @@
+package com.cdac.fruits;
+import java.util.Scanner;
+public class Orange extends Fruits
+{
+
+	 Scanner sc=new Scanner(System.in);
+		public Orange(String colour,double weight,String name,boolean fresh)
+		{
+			super("Orange"+colour,weight,name,fresh);
+			
+		}
+		public Orange()
+		{
+			
+		}
+		public String taste()
+		{
+			return "Sour !";
+		
+	}
+		public void juice()
+		{
+			Fruits o1=new Fruits();
+			
+			o1.setName(sc.next());
+			o1.setWeight(sc.nextDouble());
+			System.out.println("Name of Mango "+o1.getName());
+			System.out.println("Weight of Mango "+o1.getWeight());
+			System.out.println("creating pulp !");
+		}
+
+}

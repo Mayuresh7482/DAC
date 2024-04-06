@@ -1,0 +1,13 @@
+package com.cdac.tester;
+import com.cdac.fruits.Apple;
+public class FruitBaskate {
+
+	
+
+	public static void main(String[] args) {
+		Apple a=new Apple("Red",25,"Apple",true);
+		System.out.println(a.taste());
+
+	}
+
+}
